@@ -19,6 +19,9 @@ const int AZ_OFFSET = 0;
 const int GX_OFFSET = 2;
 const int GY_OFFSET = -6;
 const int GZ_OFFSET = -4;
+const int MX_OFFSET = 0;
+const int MY_OFFSET = 0;
+const int MZ_OFFSET = 0; 
 
 void sensorInit() {
   //I2C init
@@ -52,15 +55,21 @@ void setup() {
 void loop() {
   gyro_acc.read();
   mag.read();
-  int16_t dataValues[6];
+  int16_t dataValues[9];
   dataValues[0] = ((gyro_acc.a.x>>4) - AX_OFFSET);
   dataValues[1] = ((gyro_acc.a.y>>4) - AY_OFFSET);
   dataValues[2] = ((gyro_acc.a.z>>4) - AZ_OFFSET);
+  
   dataValues[3] = ((gyro_acc.g.x>>4) - GX_OFFSET);
   dataValues[4] = ((gyro_acc.g.y>>4) - GY_OFFSET);
   dataValues[5] = ((gyro_acc.g.z>>4) - GZ_OFFSET);
 
+  dataValues[6] = ((mag.m.x>>4) - MX_OFFSET);
+  dataValues[7] = ((mag.m.y>>4) - MY_OFFSET);
+  dataValues[8] = ((mag.m.z>>4) - MZ_OFFSET);
+
   for (int i = 0; i < sizeof(dataValues)/sizeof(int16_t); i++) {
+    //Accel xyz, Gyro xyz, Magnet xyz
     Serial.print(dataValues[i]);
     Serial.print('\t');
   }
