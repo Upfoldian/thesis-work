@@ -20,24 +20,25 @@ void setup() {
 }
 
 void loop() {
-  uint8_t buf[16];
+  uint8_t data = 1;
+  unsigned long start = millis();
+  rf95.send((uint8_t*) &data, sizeof(data));
+  rf95.waitPacketSent();
+  
+  uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
+  
   if (rf95.waitAvailableTimeout(3000)) { 
-    // Should be a reply message for us now   
     if (rf95.recv(buf, &len)) {
-      int16_t* d = (int16_t)buf;
-      for (int i = 0; i < 9; i++) {
-        Serial.print(d[i]);
-        Serial.print('\t');
-      }
-      Serial.print('\n');
-      
-
+      unsigned long finish = millis();
+      Serial.print("Time taken: ");
+      Serial.println(finish-start);
     } else {
       Serial.println("recv failed");
     }
   } else {
     Serial.println("No reply, is LoRa server running?");
   }
+  delay(300);
 }
 

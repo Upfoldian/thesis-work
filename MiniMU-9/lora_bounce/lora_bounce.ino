@@ -25,14 +25,9 @@ void loop() {
   if (rf95.waitAvailableTimeout(3000)) { 
     // Should be a reply message for us now   
     if (rf95.recv(buf, &len)) {
-      int16_t* d = (int16_t)buf;
-      for (int i = 0; i < 9; i++) {
-        Serial.print(d[i]);
-        Serial.print('\t');
-      }
-      Serial.print('\n');
-      
-
+      uint8_t data = 5; 
+      rf95.send((uint8_t*) &data, sizeof(data));
+      rf95.waitPacketSent();
     } else {
       Serial.println("recv failed");
     }
