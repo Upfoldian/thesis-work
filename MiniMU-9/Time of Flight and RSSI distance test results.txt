@@ -1,0 +1,21 @@
+RSSI:
+	<1cm:	-32
+	10cm:	-32
+	20cm:	-33
+	30cm:	-33
+	40cm:	-35
+	1m:		-40
+	(below tests conducted inside house, approximate distances only)
+	~7.5m:	-48
+	~15m:	-55
+	~30m:	-61
+
+Time of Flight:
+
+	<1cm:	66ms
+	10cm:	66ms
+	50cm:	66ms
+	5m:		66ms
+	30m:	66ms
+
+	

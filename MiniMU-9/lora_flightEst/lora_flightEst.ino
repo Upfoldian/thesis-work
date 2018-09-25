@@ -32,7 +32,9 @@ void loop() {
     if (rf95.recv(buf, &len)) {
       unsigned long finish = millis();
       Serial.print("Time taken: ");
-      Serial.println(finish-start);
+      Serial.print(finish-start);
+      Serial.print("\tRSSI: ");
+      Serial.println(rf95.lastRssi(), DEC);
     } else {
       Serial.println("recv failed");
     }
