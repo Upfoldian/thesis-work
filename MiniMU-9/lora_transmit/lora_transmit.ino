@@ -17,11 +17,24 @@ const int AX_OFFSET = 0;
 const int AY_OFFSET = 0;
 const int AZ_OFFSET = 0;
 const int GX_OFFSET = 2;
-const int GY_OFFSET = -6;
+const int GY_OFFSET = -5;
 const int GZ_OFFSET = -4;
 const int MX_OFFSET = 0;
 const int MY_OFFSET = 0;
 const int MZ_OFFSET = 0; 
+
+/* Some important config stuff
+ *  Unadjusted values of accelerometer at the default scale of +- 2g
+ *  has a conversion factor of 0.061 so raw value * 0.061 / 1000 = value in g
+ *  
+ *  For gyro, at default +-125, conversion rate is 4.375 millidegrees per second
+ *  or raw value * 4.375 / 1000 = value in dps
+ *  
+ *  For magnetometer/compass at default +- 4 gauss, conversion rate is 1/6842
+ *  or raw value / 6842 = value in gauss
+ */
+
+
 
 void sensorInit() {
   //I2C init

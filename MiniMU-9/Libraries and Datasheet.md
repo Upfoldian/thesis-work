@@ -7,6 +7,10 @@ Infopage from creator found here:
 
 - https://www.pololu.com/product/2738
 
+Datesheet:
+
+- https://www.st.com/resource/en/datasheet/lsm6ds33.pdf
+- https://www.pololu.com/file/0J1090/LIS3MDL-AN4602.pdf
 
 Wiring Guide:
 

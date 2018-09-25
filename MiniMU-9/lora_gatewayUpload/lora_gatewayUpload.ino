@@ -7,6 +7,7 @@ float frequency = 868.0;
 
 //System call lib
 #include <Process.h>
+#include <Console.h>
 
 void loraInit() {
   rf95.init();
@@ -18,9 +19,8 @@ void loraInit() {
 }
 
 void setup() {
-  Bridge.begin();
-  Serial.begin(9600);
-  while (!Serial);
+  Bridge.begin(115200);
+  Console.begin();
   loraInit();
 }
 
@@ -32,16 +32,17 @@ void loop() {
     // Should be a reply message for us now   
     if (rf95.recv(buf, &len)) {
       int16_t* d = (int16_t)buf;
-      for (int i = 0; i < 9; i++) {
-        Serial.print(d[i]);
-        Serial.print('\t');
-      }
-      Serial.print('\n');
-    } else {
-      Serial.println("recv failed");
+      //Just accel data for now
+      int16_t ax = d[0], ay = d[1], az = d[2];
+      String request = "https://api.thingspeak.com/update?api_key=BY42D78TPTG4IZXX&field1=" + String(d[0]);
+      request += "&field2=" + String(d[1]);
+      request += "&field3=" + String(d[2]);
+      p.begin("curl");
+      p.addParameter("-k");
+      p.addParameter(request);
+      p.run();
+      delay(5000);
     }
-  } else {
-    Serial.println("No reply, is LoRa server running?");
   }
 }
 
