@@ -28,7 +28,10 @@ const int16_t MZ_OFFSET = 0;
  *  or raw value / 6842 = value in gauss
  */
 
-
+const int N = 5;
+const int S = 7;
+const int W = 6;
+const int E = 4;
 
 void sensorInit() {
   //I2C init
@@ -42,6 +45,9 @@ void sensorInit() {
   mag.enableDefault();
   //Gyro init
   //gyro_acc.writeReg(LSM6::CTRL2_G, 0x4C); // 104 Hz, 2000 dps full scale
+  for (int i = 4; i < 8; i++) {
+    pinMode(i, OUTPUT); 
+  }
 }
 
 void setup() {
@@ -64,17 +70,39 @@ double getHeadingDeg(double x, double y) {
   return heading;
 }
 String getHeadingStr(double heading) {
-
-  if (heading > 80 && heading < 100) {
+  for (int i = 4; i < 8; i++) {
+    digitalWrite(i, LOW);
+  }
+  if (heading >= 22.5 && heading < 67.8 ) {
+    digitalWrite(N, HIGH);
+    digitalWrite(W, HIGH);
+    return "NW";
+  } else if (heading >= 67.5 && heading < 112.5) {
+    digitalWrite(N, HIGH);
     return "N";
-  } else if (heading > 260 && heading < 280) {
-    return "S";
-  } else if (heading > 170 && heading < 190) {
+  } else if (heading >= 112.5 && heading < 157.5) {
+    digitalWrite(N, HIGH);
+    digitalWrite(E, HIGH);
+    return "NE";
+  } else if (heading >= 157.5 && heading < 202.5) {
+    digitalWrite(E, HIGH);
     return "E";
-  } else if (heading > 350 || heading < 10) {
+  } else if (heading >= 202.5 && heading < 247.5) {
+    digitalWrite(E, HIGH);
+    digitalWrite(S, HIGH);
+    return "SE";
+  } else if (heading >= 247.5 && heading < 292.5) {
+    digitalWrite(S, HIGH);
+    return "S";
+  } else if (heading >= 292.5 && heading < 337.5) {
+    digitalWrite(S, HIGH);
+    digitalWrite(W, HIGH);
+    return "SW";
+  } else if (heading >= 337.5 || heading < 22.5) {
+    digitalWrite(W, HIGH);
     return "W";
   } else {
-    return "somewhere else";
+    return "?";
   }
 }
 void loop() {
@@ -95,7 +123,7 @@ void loop() {
 
   //Math.atan2(sensor.y, sensor.x) * (180 / Math.PI)
   double headingDeg = getHeadingDeg(magY,magZ);
-  Serial.println(String(magX) + "\t" + String(magY) + "\t" + String(magZ) + "\tHeadingDeg: " + String(headingDeg) + "\tHeadingStr: " + getHeadingStr(headingDeg));
-  delay(300);
+  Serial.println("HeadingDeg: " + String(headingDeg) + "\tHeadingStr: " + getHeadingStr(headingDeg));
+  delay(100);
 }
 
