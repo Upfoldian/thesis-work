@@ -68,7 +68,7 @@ void setup() {
 void loop() {
   gyro_acc.read();
   mag.read();
-  int16_t dataValues[9];
+  int dataValues[9];
   dataValues[0] = ((gyro_acc.a.x>>4) - AX_OFFSET);
   dataValues[1] = ((gyro_acc.a.y>>4) - AY_OFFSET);
   dataValues[2] = ((gyro_acc.a.z>>4) - AZ_OFFSET);

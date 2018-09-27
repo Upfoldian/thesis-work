@@ -16,23 +16,35 @@ void loraInit() {
 
 void setup() {
   Serial.begin(9600);
+  pinMode(7, OUTPUT);
   loraInit();
 }
 
 void loop() {
-  uint8_t buf[5];
+
+  uint8_t data = 25;
+  rf95.send((uint8_t*) &data, sizeof(data));
+  rf95.waitPacketSent();
+
+  
+  uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
-  if (rf95.waitAvailableTimeout(3000)) { 
-    // Should be a reply message for us now   
+
+  if (rf95.waitAvailableTimeout(1000)) { 
     if (rf95.recv(buf, &len)) {
-      Serial.println("Got: " + String(buf[0]));
-      rf95.send((uint8_t*) &buf[0], sizeof(buf[0]));
-      rf95.waitPacketSent();
+      Serial.println("reply: " + String(buf[0]));
+      if (buf[0] == 25) {
+        Serial.println("HIGH");
+        digitalWrite(7, HIGH);
+        buf[0] = 0;
+      }
+      
     } else {
       Serial.println("recv failed");
     }
   } else {
-    Serial.println("No reply, is LoRa server running?");
+    digitalWrite(7, LOW);
   }
+  delay(300);
 }
 

@@ -41,7 +41,7 @@ void loop() {
       p.addParameter("-k");
       p.addParameter(request);
       p.run();
-      delay(5000);
+      delay(15000);
     }
   }
 }
