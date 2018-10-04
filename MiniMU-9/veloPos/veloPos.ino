@@ -87,10 +87,12 @@ void loop() {
       }
       totals[i] = totals[i] / avgSize;
     }
+    /*
     for (int i = 0; i < 3; i++) {
-     // Serial.print(String(totals[i]) + "\t");
+     Serial.print(String(totals[i]) + "\t");
     }
-    //Serial.print("\n");
+    Serial.print("\n");
+    */
     //Integration stuff
     if (count < 10) {
       count++;
