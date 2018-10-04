@@ -27,7 +27,7 @@ const int16_t MZ_OFFSET = 0;
  *  For magnetometer/compass at default +- 4 gauss, conversion rate is 1/6842
  *  or raw value / 6842 = value in gauss
  */
-const double accelAdjust = 0.061/1000.0;
+const double accelAdjust = 0.061/1000.0 * 9.81;
 const double gyroAdjust = 4.375/1000.0;
 
 void sensorInit() {
@@ -60,7 +60,11 @@ void loop() {
   int avgSize = 10;
   int oldest = 0;
   double dataValues[9][avgSize];
+  double prevAvg = 0;
   unsigned long currentTime, prevTime = millis();
+  int count = 0;
+  double veloX = 0.0;
+  
   while (true) {
     gyro_acc.read();
     mag.read();
@@ -84,13 +88,21 @@ void loop() {
       totals[i] = totals[i] / avgSize;
     }
     for (int i = 0; i < 3; i++) {
-      Serial.print(String(totals[i]) + "\t");
+     // Serial.print(String(totals[i]) + "\t");
     }
-    Serial.print("\n");
-
+    //Serial.print("\n");
     //Integration stuff
+    if (count < 10) {
+      count++;
+    } else {
+      double deltaT = (currentTime - prevTime)/1000.0; //converted to seconds
+      veloX += (deltaT * (prevAvg-9.81)) + (deltaT * (totals[0] - prevAvg)/2.0);
+      Serial.println(veloX);
     
-    
+      prevTime = currentTime;
+      prevAvg = totals[0];
+    }
+    delay(10);
   }
 }
 
