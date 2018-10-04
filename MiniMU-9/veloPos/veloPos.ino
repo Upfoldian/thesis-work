@@ -57,52 +57,64 @@ int incOldest (int current, int size) {
 }
 
 void loop() {
-  int avgSize = 10;
-  int oldest = 0;
+  int avgSize = 1, count = 0, oldest = 0;
   double dataValues[9][avgSize];
-  double prevAvg = 0;
+  double prevAvg[9] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+  double velo[3] = {0.0, 0.0, 0.0};
+  double prevVelo[3] = {0.0, 0.0, 0.0};
+  double pos[3] = {0.0, 0.0, 0.0};
+  
   unsigned long currentTime, prevTime = millis();
-  int count = 0;
-  double veloX = 0.0;
   
   while (true) {
     gyro_acc.read();
     mag.read();
     currentTime = millis();
-    
+    // Assign new values
     dataValues[0][oldest] = ((gyro_acc.a.x) - AX_OFFSET) * accelAdjust;
     dataValues[1][oldest] = ((gyro_acc.a.y) - AY_OFFSET) * accelAdjust;
     dataValues[2][oldest] = ((gyro_acc.a.z) - AZ_OFFSET) * accelAdjust;
     
-    //dataValues[3][oldest] = ((gyro_acc.g.x) - GX_OFFSET);// * gyroAdjust;
-    //dataValues[4][oldest] = ((gyro_acc.g.y) - GY_OFFSET);// * gyroAdjust;
-    //dataValues[5][oldest] = ((gyro_acc.g.z) - GZ_OFFSET);// * gyroAdjust;
+    dataValues[3][oldest] = ((gyro_acc.g.x) - GX_OFFSET);// * gyroAdjust;
+    dataValues[4][oldest] = ((gyro_acc.g.y) - GY_OFFSET);// * gyroAdjust;
+    dataValues[5][oldest] = ((gyro_acc.g.z) - GZ_OFFSET);// * gyroAdjust;
     
     oldest = incOldest(oldest, avgSize);
-    
+    // average out the last 10 values
     double totals[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    for (int i = 0; i < 3; i++) {
+   
+    for (int i = 0; i < 6; i++) {
       for (int j = 0; j < avgSize; j++) {
          totals[i] += dataValues[i][j];
       }
       totals[i] = totals[i] / avgSize;
     }
-    /*
-    for (int i = 0; i < 3; i++) {
-     Serial.print(String(totals[i]) + "\t");
-    }
-    Serial.print("\n");
-    */
+    
     //Integration stuff
     if (count < 10) {
       count++;
     } else {
       double deltaT = (currentTime - prevTime)/1000.0; //converted to seconds
-      veloX += (deltaT * (prevAvg-9.81)) + (deltaT * (totals[0] - prevAvg)/2.0);
-      Serial.println(veloX);
+
+      for (int i = 0; i < 3; i++) {
+        prevVelo[i] = velo[i];
+      }
+      
+      velo[0] += (deltaT * (prevAvg[0]-9.81)) + (deltaT * (totals[0] - prevAvg[0])/2.0);
+      velo[1] += (deltaT * prevAvg[1]) + (deltaT * (totals[1] - prevAvg[1])/2.0);
+      velo[2] += (deltaT * prevAvg[2]) + (deltaT * (totals[2] - prevAvg[2])/2.0);
+      
+      for (int i = 0; i < 3; i++) {
+        pos[i] += (deltaT * prevVelo[i]) + (deltaT * (velo[i] - prevVelo[i])/2.0);
+      }
+      
+      
+      Serial.println(String(pos[0]) + "\t" + String(pos[1]) + "\t" + String(pos[2]));
     
       prevTime = currentTime;
-      prevAvg = totals[0];
+      for (int i = 0; i < 3; i++) {
+        prevAvg[i] = totals[i];
+      }
     }
     delay(10);
   }
