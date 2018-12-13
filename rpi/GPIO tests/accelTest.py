@@ -7,7 +7,7 @@ import time
 
 # Import the LSM303 module.
 import TomLSM303C
-
+from math import atan2, degrees
 
 # Create a LSM303 instance.
 lsm303 = TomLSM303C.LSM303C() #check it with sudo i2cdetect -y 1 (should be 1D, 1E)
@@ -19,7 +19,11 @@ while True:
     # Grab the X, Y, Z components from the reading and print them out.
     accel_x, accel_y, accel_z = accel
     mag_x, mag_y, mag_z = mag
-    #print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
-    print('AX=%04d, AY=%04d, AZ=%04d\tMX=%04d, MY=%04d, MZ=%04d' % (accel_x, accel_y, accel_z, mag_x, mag_y, mag_z) )
+    #print('AX=%04d, AY=%04d, AZ=%04d\tMX=%04d, MY=%04d, MZ=%04d' % (accel_x, accel_y, accel_z, mag_x, mag_y, mag_z) )
+
+    angle = round(degrees(atan2(mag_y, mag_x)), 0) % 360
+
+    print("Heading: %d " % angle)
+
     # Wait half a second and repeat.
     time.sleep(0.5)

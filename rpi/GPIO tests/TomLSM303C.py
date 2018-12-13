@@ -35,7 +35,7 @@ LSM303_REGISTER_ACCEL_CTRL_REG5_A = 0x24  # DBG,    RST,    DEC1,   DEC0,   ST2,
 LSM303_REGISTER_ACCEL_OUT_X_L_A   = 0x28  # where the data at
 
 LSM303_REGISTER_MAG_CTRL_REG1_M    = 0x20 # TEN,    OM1,    OM0,    DO2,    DO1,    DO0,    0,      ST      what I want: 0x10 default is fine
-LSM303_REGISTER_MAG_CTRL_REG2_M    = 0x21 # 0,      FS1,    FS0,    0,      RBT,    RST,    0,      0       what I want: 0x60 +- 16 gause
+LSM303_REGISTER_MAG_CTRL_REG2_M    = 0x21 # 0,      FS1,    FS0,    0,      RBT,    RST,    0,      0       what I want: 0x60 +- 16 gauss
 LSM303_REGISTER_MAG_CTRL_REG3_M    = 0x22 # I2CD,   0,      LP,     0,      0,      SIM,    MD1,    MD0     what I want: 0x00 Continuous-conversion mode
 LSM303_REGISTER_MAG_CTRL_REG4_M    = 0x23 # 0,      0,      0,      0,      OMZ1,   OMZ0,   BLE,    0       what I want: 0x00 default is fine (little endian)
 LSM303_REGISTER_MAG_CTRL_REG5_M    = 0x24 # 0,      BDU,    0,      0,      0,      0,      0,      0       what I want: 0x00 default is fine
@@ -73,11 +73,9 @@ class LSM303C(object):
         ay = self._accel.readS16(0x2A) * 0.122
         az = self._accel.readS16(0x2C) * 0.122
 
-        # 16 bits according to datasheet, shifting them down to a single byte precision just for now.
         accel = (ax, ay, az)
         # # Read the magnetometer as signed 16-bit little endian values.
-        # Note that for some reason the LSM303 returns data in (X,Y,Z) order
-        mx = self._mag.readS16(0x28) *  0.58 # 0.58 mgause/LSB
+        mx = self._mag.readS16(0x28) *  0.58 # 0.58 mgauss/LSB
         my = self._mag.readS16(0x2A) *  0.58
         mz = self._mag.readS16(0x2C) *  0.58
 
