@@ -1,24 +1,13 @@
-import gpiozero
-
+from gpiozero import LED
+from gpiozero import Button
 from time import sleep
 
-leftMotor = gpiozero.PWMLED(17, frequency=50)
-
-count = 0
-up = True
-
+led= LED(17)
+button = Button(27)
+print("start!")
 while True:
-	leftMotor = count/100.0
-	
-	if up:
-		count+= 1
+	if (button.is_pressed):
+		led.on()
+		print("button on")
 	else:
-		count-=1
-
-	if (count == 100):
-		up = False
-	elif (count == 0):
-		up = True
-
-	sleep(0.05)
-	print(count)
+		led.off()
