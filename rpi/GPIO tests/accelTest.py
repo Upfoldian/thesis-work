@@ -6,11 +6,11 @@
 import time
 
 # Import the LSM303 module.
-import TomLSM303
+import TomLSM303C
 
 
 # Create a LSM303 instance.
-lsm303 = TomLSM303.LSM303() #check it with sudo i2cdetect -y 1 (should be 1D, 1E)
+lsm303 = TomLSM303C.LSM303C() #check it with sudo i2cdetect -y 1 (should be 1D, 1E)
 
 print('Printing accelerometer & magnetometer X, Y, Z axis values, press Ctrl-C to quit...')
 while True:

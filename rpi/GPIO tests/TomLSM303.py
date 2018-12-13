@@ -21,8 +21,6 @@
 # SOFTWARE.
 
 # Modified by Thomas Upfold on 13/12/2018 to work with the LSM303C device. The original file can be found here https://github.com/adafruit/Adafruit_Python_LSM303/blob/master/Adafruit_LSM303/LSM303.py
-import struct
-
 
 # These values are the default device addresses and can be found in the datasheet on page 26. Additionally, you can check these addresses in raspbian with sudo i2cdetect -y 1
 
@@ -44,8 +42,8 @@ LSM303_REGISTER_MAG_CTRL_REG5_M    = 0x24 # 0,      BDU,    0,      0,      0,  
 LSM303_REGISTER_MAG_OUT_X_L_M      = 0x28 # where the data at
 
 
-class LSM303(object):
-    """LSM303 accelerometer & magnetometer."""
+class LSM303C(object):
+    """LSM303C accelerometer & magnetometer."""
 
     def __init__(self, accel_address=LSM303_ADDRESS_ACCEL,
                  mag_address=LSM303_ADDRESS_MAG, i2c=None, **kwargs):
